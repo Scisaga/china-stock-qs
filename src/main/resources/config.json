@@ -1,0 +1,59 @@
+{
+  "redis": {
+	"url": "118.190.83.89:6379",
+	"password": "ecj209BA"
+  },
+  "io": {
+	"connectTimeout": 30000,
+	"readTimeout": 30000,
+	"crawlerNum": 4,
+	"requestPerSecondLimit": 30
+  },
+  "abuyun": {
+	"user" : "H7P69I3TL81H608D",
+	"passwd" : "207A760AB095C8F0"
+  },
+  "database": {
+	"musical_sharing": {
+	  "url": "jdbc:mysql://rm-m5eclh17d2184z8j5.mysql.rds.aliyuncs.com:3306/musical_sharing",
+	  "username": "musical_sharing",
+	  "password": "musical_sharing0",
+	  "initialPoolSize": 5,
+	  "minPoolSize": 5,
+	  "acquireIncrement": 5,
+	  "maxPoolSize": 50,
+	  "maxStatements": 200
+	}
+  },
+  "dev": {
+	"link": {
+	  "chromeDriver": "chromedriver"
+	},
+	"redis": {
+	  "url": "118.190.83.89:6379",
+	  "password": "ecj209BA"
+	},
+	"io": {
+	  "connectTimeout": 15000,
+	  "readTimeout": 15000,
+	  "chromeDriverAgentNum": 1,
+	  "requestPerSecondLimit": 20
+	},
+	"abuyun": {
+	  "user" : "H9Y99G067VQSE0YD",
+	  "passwd" : "CA7CA4C4F3DB5DA0"
+	},
+	"database": {
+	  "musical_sharing": {
+		"url": "jdbc:mysql://127.0.0.1:3306/musical_sharing",
+		"username": "musical_sharing",
+		"password": "musical_sharing0",
+		"initialPoolSize": 5,
+		"minPoolSize": 5,
+		"acquireIncrement": 5,
+		"maxPoolSize": 50,
+		"maxStatements": 200
+	  }
+	}
+  }
+}
