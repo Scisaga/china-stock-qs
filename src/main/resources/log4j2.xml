@@ -4,7 +4,7 @@
 
 	<appenders>
 	
-		<File name="core-log" fileName="china-stock-qs.log" append="false">
+		<File name="log" fileName="log/core.log" append="false">
 			<PatternLayout
 				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] [%class{36}:%L] %M - %msg%xEx%n" />
 		</File>
@@ -21,7 +21,7 @@
 	<loggers>
 		<root level="info">
 			<appender-ref ref="Console"/>
-			<appender-ref ref="core-log" />
+			<appender-ref ref="log" />
 		</root>
 	</loggers>
 

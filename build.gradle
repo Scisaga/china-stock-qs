@@ -9,9 +9,10 @@ apply plugin: 'application'
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-mainClassName = 'org.tfelab.musical_sharing.Crawler'
+mainClassName = 'org.tfelab.stock_qs.Crawler'
+//mainClassName = 'org.tfelab.stock_qs.ServiceWrapper'
 
-applicationDefaultJvmArgs = ["-Xms200m", "-Xmx2000m", "-Dsun.net.inetaddr.ttl=-1", "-Djava.net.preferIPv4Stack=true", "-Dlog4j.configurationFile=log4j2.xml", "-Dfile.encoding=UTF8", "-Djdk.http.auth.tunneling.disabledSchemes=\"\""]
+applicationDefaultJvmArgs = ["-Xms200m", "-Xmx4000m", "-Dsun.net.inetaddr.ttl=-1", "-Djava.net.preferIPv4Stack=true", "-Dlog4j.configurationFile=log4j2.xml", "-Dfile.encoding=UTF8", "-Djdk.http.auth.tunneling.disabledSchemes=\"\""]
 
 repositories {
 	jcenter()
@@ -19,57 +20,68 @@ repositories {
 		url "http://repo.maven.apache.org/maven2"
 	}
 	maven {
+		url "http://tfelab.org:60002/content/groups/public"
+		credentials {
+			username developer
+			password developer_password
+		}
+	}
+	maven {
 		url "https://jitpack.io"
 	}
 }
 
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository(url: 'http://tfelab.org:60002/content/repositories/releases/') {
+				authentication(userName: deployment, password: deployment_password)
+			}
+			snapshotRepository(url: 'http://tfelab.org:60002/content/repositories/snapshots/') {
+				authentication(userName: deployment, password: deployment_password)
+			}
+		}
+	}
+}
+
 dependencies {
-	compile group: 'io.appium', name: 'java-client', version: '4.1.2'
-
-	compile 'net.lightbody.bmp:browsermob-core:2.1.4'
-
-	compile 'com.github.vidstige:jadb:v1.0.1'
-
-	compile 'com.mchange:c3p0:0.9.5.2'
-
-	compile 'com.j256.ormlite:ormlite-core:4.48'
-	compile 'com.j256.ormlite:ormlite-jdbc:4.48'
-
-	compile 'org.redisson:redisson:2.4.0'
-
-	compile 'org.reflections:reflections:0.9.11'
-
-	compile 'com.fasterxml.jackson.core:jackson-core:2.8.9'
-	compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.9'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
-
-	compile 'com.typesafe:config:1.3.0'
-
-	compile 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
-
-	compile 'org.jsoup:jsoup:1.9.2'
-
-	compile 'joda-time:joda-time:2.8.2'
-
-	compile 'ch.ethz.ganymed:ganymed-ssh2:build210'
-
-	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
-	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.21'
-
-	compile 'org.apache.logging.log4j:log4j-api:2.4.1'
-	compile 'org.apache.logging.log4j:log4j-core:2.4.1'
-
+	compile 'org.tfelab:core:1.0-SNAPSHOT'
 	testCompile group: 'junit', name: 'junit', version: '4.12'
-
 	runtime 'mysql:mysql-connector-java:5.1.37'
 }
 
 task copyFiles(group: 'tetra') << {
 	copy {
+		from 'chromedriver'
+		into 'src/main/dist'
+	}
+	copy {
+		from 'cacerts'
+		into 'src/main/dist'
+	}
+	copy {
 		from fileTree('src/main/resources')
 		into 'src/main/dist'
+	}
+	copy {
+		from fileTree('www')
+		into 'src/main/dist/www'
 	}
 }
 
 jar.dependsOn copyFiles
 
+startScripts {
+	doLast {
+		def winScriptFile  = file getWindowsScript()
+		def winFileText = winScriptFile.text
+		winFileText = winFileText.replaceAll('set CLASSPATH=.*', '@rem original CLASSPATH declaration replaced by:\nset CLASSPATH=%APP_HOME%\\\\lib\\\\\\*')
+		winFileText = winFileText.replaceAll('@rem Set local scope', '\n@ping 127.0.0.1 -n 3 >nul\n@rem Set local scope')
+		winScriptFile.text = winFileText
+
+		def unixScriptFile  = file getUnixScript()
+		def unixFileText = unixScriptFile.text
+		unixFileText = unixFileText.replaceAll('APP_NAME', 'sleep 3\nexport DISPLAY=:99\nAPP_NAME')
+		unixScriptFile.text = unixFileText
+	}
+}
