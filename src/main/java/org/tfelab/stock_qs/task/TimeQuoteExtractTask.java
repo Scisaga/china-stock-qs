@@ -13,6 +13,7 @@ import org.tfelab.stock_qs.Crawler;
 import org.tfelab.stock_qs.model.TaskTrace;
 import org.tfelab.stock_qs.model.TimeQuote;
 import org.tfelab.txt.DateFormatUtil;
+import org.tfelab.txt.NumberFormatUtil;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -144,11 +145,11 @@ public class TimeQuoteExtractTask extends Task {
 								m.group("time").replaceAll("/", "-").replaceAll("-[一二三四五六日七]", " ")
 						);
 
-						float price = DateFormatUtil.parseFloat(m.group("price"));
+						float price = NumberFormatUtil.parseFloat(m.group("price"));
 
-						long volume = DateFormatUtil.parseInt(m.group("volume")) * 100;
+						long volume = NumberFormatUtil.parseInt(m.group("volume")) * 100;
 
-						float change_value = DateFormatUtil.parseFloat(m.group("change"));
+						float change_value = NumberFormatUtil.parseFloat(m.group("change"));
 
 						TimeQuote timeQuote = new TimeQuote(code, time, price, change_value, volume);
 

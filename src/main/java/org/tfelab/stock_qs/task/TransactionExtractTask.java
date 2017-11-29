@@ -10,6 +10,7 @@ import org.tfelab.stock_qs.model.TaskTrace;
 import org.tfelab.stock_qs.model.Transaction;
 import org.tfelab.stock_qs.proxy.ProxyManager;
 import org.tfelab.txt.DateFormatUtil;
+import org.tfelab.txt.NumberFormatUtil;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -115,7 +116,7 @@ public class TransactionExtractTask extends Task {
 				float change_value = Float.parseFloat(change_value_str);
 
 				long volume = Long.parseLong(recordMatcher.group("volume")) * 100;
-				double turnover = DateFormatUtil.parseDouble(recordMatcher.group("turnover"));
+				double turnover = NumberFormatUtil.parseDouble(recordMatcher.group("turnover"));
 
 				String type = recordMatcher.group("type");
 

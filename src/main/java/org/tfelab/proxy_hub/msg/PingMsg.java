@@ -6,5 +6,6 @@ public class PingMsg extends Msg{
 
 	public PingMsg(String clientId) {
 		super(clientId);
+		this.setType(Type.Ping);
 	}
 }

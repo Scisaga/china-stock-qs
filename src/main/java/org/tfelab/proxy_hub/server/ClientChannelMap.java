@@ -3,7 +3,9 @@ package org.tfelab.proxy_hub.server;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.SocketChannel;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -33,5 +35,9 @@ public class ClientChannelMap {
 				map.remove(entry.getKey());
 			}
 		}
+	}
+
+	public static Set<String> getKeys() {
+		return map.keySet();
 	}
 }

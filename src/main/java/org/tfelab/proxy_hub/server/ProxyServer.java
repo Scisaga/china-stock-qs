@@ -1,12 +1,8 @@
 package org.tfelab.proxy_hub.server;
 
+import com.mongodb.gridfs.CLI;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.UnpooledByteBufAllocator;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -17,37 +13,38 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.tfelab.proxy_hub.common.ProxyContext;
+import org.tfelab.proxy_hub.common.UserSecret;
+import org.tfelab.proxy_hub.msg.AskMsg;
 import org.tfelab.proxy_hub.server.handler.ClientRegistrationHandler;
 
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLException;
-import java.security.cert.CertificateException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
- * Proxy Hub Server
+ * Proxy Hub ProxyServer
  * @author scisaga@gmail.com
  * @date 2017/11/28
  */
-public class Server {
+public class ProxyServer {
 
-	public static final Logger logger = LogManager.getLogger(Server.class.getName());
-
-	public int proxy_port = 50101;
-	public int client_port = 50102; // 客户端反向连接端口
+	public static final Logger logger = LogManager.getLogger(ProxyServer.class.getName());
 
 	SelfSignedCertificate ssc;
 	SslContext sslCtx;
 
-	public Server() {
+	Timer timer = new Timer();
+
+
+	public ProxyServer() {
 
 		SelfSignedCertificate ssc = null;
 		try {
 			ssc = new SelfSignedCertificate();
-			SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+			sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -61,8 +58,6 @@ public class Server {
 
 		EventLoopGroup workerGroup_client = new NioEventLoopGroup();
 
-		new Thread() {
-			public void run() {
 				try {
 					ServerBootstrap bootstrap = new ServerBootstrap();
 					bootstrap.group(workerGroup_client, workerGroup_client)
@@ -89,18 +84,36 @@ public class Server {
 								}
 							});
 
-					ChannelFuture cf = bootstrap.bind(client_port).sync();
+					ChannelFuture cf = bootstrap.bind(ProxyContext.client_port).sync();
 
 					if(cf.isSuccess()) {
-						logger.info("Client registration server start @port: {}. ", client_port);
+						logger.info("Registration server start @port: {}. ", ProxyContext.client_port);
 					}
 
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+
+				for(String key : ClientChannelMap.getKeys()) {
+
+					Channel channel = ClientChannelMap.get(key);
+					if(channel.isActive()) {
+						AskMsg askMsg = new AskMsg(null, AskMsg.Type.Pon);
+						askMsg.setBody(new UserSecret("11111102664885", "ezkzct"));
+						ClientChannelMap.get(key).writeAndFlush(askMsg);
+					} else {
+						channel.close();
+						ClientChannelMap.add(key, null);
+						// TODO should remove client key and channel
+					}
+				}
+
 			}
-		}.start();
+		}, 10000, 20000);
 
 //		new Thread() {
 //			public void run() {
@@ -122,6 +135,6 @@ public class Server {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new Server().run();
+		new ProxyServer().run();
 	}
 }

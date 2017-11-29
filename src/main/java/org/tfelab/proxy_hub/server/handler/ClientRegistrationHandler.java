@@ -33,18 +33,19 @@ public class ClientRegistrationHandler extends SimpleChannelInboundHandler<Msg> 
             if(loginMsg.getSecrets().equals(ProxyContext.secrets)){
 
                 ClientChannelMap.add(loginMsg.getClientId(), (SocketChannel) ctx.channel());
-                logger.info("Client: {} login success. ", loginMsg.getClientId());
+                logger.info("Client:{} login success. ", loginMsg.getClientId());
             }
         }
         else {
 
         	// 之前连接失效
             if(ClientChannelMap.get(msg.getClientId()) == null){
-                AskMsg askMsg = new AskMsg(null, AskMsg.Type.Require_Login);
+                AskMsg askMsg = new AskMsg(null, AskMsg.Type.RequireLogin);
 				ctx.channel().writeAndFlush(askMsg);
             }
 
             if(msg.getType() == Ping) {
+            	logger.info("Receive msg from client:{}. ", msg.getClientId());
 				ClientChannelMap.get(msg.getClientId()).writeAndFlush(new PingMsg(null));
 			}
 			else if(msg.getType() == Ask) {
@@ -56,7 +57,7 @@ public class ClientRegistrationHandler extends SimpleChannelInboundHandler<Msg> 
 			else if(msg.getType() == Reply) {
 
 				ReplyMsg replyMsg = (ReplyMsg) msg;
-				logger.info(replyMsg.getBody());
+				logger.info(replyMsg.getBody().toJSON());
 
 			}
         }

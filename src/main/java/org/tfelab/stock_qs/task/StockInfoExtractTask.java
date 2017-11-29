@@ -4,6 +4,7 @@ import org.tfelab.io.requester.Task;
 import org.tfelab.io.requester.account.AccountWrapper;
 import org.tfelab.stock_qs.model.Stock;
 import org.tfelab.txt.DateFormatUtil;
+import org.tfelab.txt.NumberFormatUtil;
 
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -72,10 +73,10 @@ public class StockInfoExtractTask extends Task {
 						f.set(stock, DateFormatUtil.parseTime(m.group("T")));
 					}
 					else if (f.getType().equals(float.class)) {
-						f.set(stock, DateFormatUtil.parseFloat(m.group("T")));
+						f.set(stock, NumberFormatUtil.parseFloat(m.group("T")));
 					}
 					else if (f.getType().equals(double.class)) {
-						f.set(stock, DateFormatUtil.parseDouble(m.group("T")));
+						f.set(stock, NumberFormatUtil.parseDouble(m.group("T")));
 					}
 					else {
 						f.set(stock, m.group("T"));

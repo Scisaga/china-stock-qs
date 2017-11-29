@@ -156,7 +156,7 @@ public class Proxy implements ProxyWrapper{
 				.where()
 				.eq("host", host)
 				.and()
-				.eq("port", port)
+				.eq("client_port", port)
 				.and()
 				.eq("username", username)
 				.and()

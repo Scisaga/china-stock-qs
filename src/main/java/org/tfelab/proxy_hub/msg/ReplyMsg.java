@@ -8,6 +8,13 @@ public class ReplyMsg extends Msg {
 
 	public ReplyMsg(String clientId) {
 		super(clientId);
+		this.setType(Type.Reply);
+	}
+
+	public ReplyMsg(String clientId, JSONable body) {
+		super(clientId);
+		this.setType(Type.Reply);
+		this.body = body;
 	}
 
 	public void setBody(JSONable body) {
