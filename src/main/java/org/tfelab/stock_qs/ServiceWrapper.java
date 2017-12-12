@@ -37,7 +37,7 @@ public class ServiceWrapper {
 	 */
 	public ServiceWrapper() {
 
-		//client_port = Configs.dev.getInt("client_port");
+		//Client_Port = Configs.dev.getInt("Client_Port");
 		staticFiles.externalLocation("www");
 		port(port);
 		

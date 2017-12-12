@@ -154,9 +154,9 @@ public class Proxy implements ProxyWrapper{
 
 		List<Proxy> existProxys = dao.queryBuilder()
 				.where()
-				.eq("host", host)
+				.eq("Host", host)
 				.and()
-				.eq("client_port", port)
+				.eq("Client_Port", port)
 				.and()
 				.eq("username", username)
 				.and()
@@ -215,7 +215,7 @@ public class Proxy implements ProxyWrapper{
 		Dao<Proxy, String> dao = OrmLiteDaoManager.getDao(Proxy.class);
 
 		QueryBuilder<Proxy, String> queryBuilder = dao.queryBuilder();
-		Proxy ac = queryBuilder.limit(1).orderBy("use_cnt", true)
+		Proxy ac = queryBuilder.limit(1L).orderBy("use_cnt", true)
 				.where().eq("group", group)
 				.and().eq("enable", true)
 				.and().eq("status", Status.NORMAL)

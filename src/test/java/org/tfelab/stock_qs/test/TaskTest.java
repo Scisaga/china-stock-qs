@@ -15,13 +15,17 @@ public class TaskTest {
 	@Test
 	public void createSimpleTask() throws Exception {
 
-		Task t = new Task("http://www.baidu.com");
+		Task t = new Task("http://stackoverflow.com/");
 		Task t_ = new Task("http://www.baidu.com");
-		Assert.assertNotEquals(t.getId(), t_.getId());
-
 		t.setProxyWrapper(new ProxyWrapperImpl("127.0.0.1", 8888, null, null));
-		t.setAccount(new AccountWrapperImpl().setProxyGroup(ProxyManager.abuyun_g));
-		t.insert();
+		Crawler.getInstance().addTask(t);
+		Thread.sleep(100000);
+
+//		Assert.assertNotEquals(t.getId(), t_.getId());
+//
+//		t.setProxyWrapper(new ProxyWrapperImpl("127.0.0.1", 8888, null, null));
+//		t.setAccount(new AccountWrapperImpl().setProxyGroup(ProxyManager.abuyun_g));
+//		t.insert();
 
 	}
 

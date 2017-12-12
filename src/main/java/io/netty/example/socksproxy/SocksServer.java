@@ -24,7 +24,7 @@ import io.netty.handler.logging.LoggingHandler;
 
 public final class SocksServer {
 
-	static final int PORT = Integer.parseInt(System.getProperty("client_port", "1080"));
+	static final int PORT = Integer.parseInt(System.getProperty("Client_Port", "1080"));
 
 	public static void main(String[] args) throws Exception {
 		EventLoopGroup bossGroup = new NioEventLoopGroup(1);

@@ -29,8 +29,6 @@ import org.tfelab.proxy_hub.common.ProxyContext;
 import org.tfelab.proxy_hub.common.UserSecret;
 import org.tfelab.proxy_hub.msg.LoginMsg;
 import org.tfelab.proxy_hub.msg.Msg;
-import org.tfelab.proxy_hub.msg.ReplyMsg;
-import org.tfelab.stock_qs.model.Proxy;
 import org.tfelab.stock_qs.proxy.ProxyManager;
 import org.tfelab.util.NetworkUtil;
 
@@ -94,13 +92,13 @@ public class ProxyNode {
 							.channel(NioSocketChannel.class)
 							.handler(new LoggingHandler(LogLevel.INFO))
 							.option(ChannelOption.SO_KEEPALIVE, true)
-							.remoteAddress(ProxyContext.host, ProxyContext.client_port)
+							.remoteAddress(ProxyContext.Host, ProxyContext.Client_Port)
 							.handler(new ChannelInitializer<SocketChannel>() {
 								@Override
 								protected void initChannel(SocketChannel socketChannel) throws Exception {
 									ChannelPipeline p = socketChannel.pipeline();
 									p.addLast(new IdleStateHandler(0,0,60));
-									p.addLast(sslCtx.newHandler(socketChannel.alloc(), ProxyContext.host, ProxyContext.client_port));
+									p.addLast(sslCtx.newHandler(socketChannel.alloc(), ProxyContext.Host, ProxyContext.Client_Port));
 									p.addLast(new ObjectEncoder());
 									p.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
 									p.addLast(new ClientHandler());
@@ -116,7 +114,7 @@ public class ProxyNode {
 		}
 
 
-			ChannelFuture cf = bootstrap.connect(ProxyContext.host, ProxyContext.client_port);
+			ChannelFuture cf = bootstrap.connect(ProxyContext.Host, ProxyContext.Client_Port);
 
 			cf.addListener(new ChannelFutureListener() {
 				@Override
@@ -124,7 +122,7 @@ public class ProxyNode {
 					if(cf.isSuccess()) {
 
 						channel = (SocketChannel) cf.channel();
-						logger.info("Connect to registration server: {}:{}. ", ProxyContext.host, ProxyContext.client_port);
+						logger.info("Connect to registration server: {}:{}. ", ProxyContext.Host, ProxyContext.Client_Port);
 
 						channel.closeFuture().addListener(new ChannelFutureListener() {
 							@Override
@@ -135,14 +133,14 @@ public class ProxyNode {
 						});
 
 						LoginMsg loginMsg = new LoginMsg(id);
-						loginMsg.setSecrets(ProxyContext.secrets);
+						loginMsg.setSecrets(ProxyContext.Secrets);
 						channel.writeAndFlush(loginMsg);
 
 						logger.info("Send login request to server. ");
 					}
 					else {
 						cf.channel().close();
-						logger.warn("Failed to connect to registration server: {}:{}. ", ProxyContext.host, ProxyContext.client_port);
+						logger.warn("Failed to connect to registration server: {}:{}. ", ProxyContext.Host, ProxyContext.Client_Port);
 
 						cf.channel().eventLoop().schedule(new Runnable() {
 							@Override
@@ -181,6 +179,9 @@ public class ProxyNode {
 		return info;
 	}
 
+	/**
+	 * 获取节点信息
+	 */
 	public static class NodeInfo implements JSONable, Serializable {
 
 		private static final long serialVersionUID = 1L;

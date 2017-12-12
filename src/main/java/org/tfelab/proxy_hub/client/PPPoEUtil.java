@@ -12,15 +12,15 @@ import java.util.Random;
 
 /**
  * 需要提前安装
- * sudo apt -y install pppoe && sudo chmod 777 /etc/ppp/peers/ -R && sudo chmod 777 /etc/ppp/chap-secrets /etc/ppp/pap-secrets
+ * sudo apt -y install pppoe && sudo chmod 777 /etc/ppp/peers/ -R && sudo chmod 777 /etc/ppp/chap-Secrets /etc/ppp/pap-Secrets
  */
 public class PPPoEUtil {
 
 	public static final Logger logger = LogManager.getLogger(PPPoEUtil.class.getName());
 
 	private static String provider_path = "/etc/ppp/peers/proxy";
-	private static String chap_secrets_path = "/etc/ppp/chap-secrets";
-	private static String pap_secrets_path = "/etc/ppp/pap-secrets";
+	private static String chap_secrets_path = "/etc/ppp/chap-Secrets";
+	private static String pap_secrets_path = "/etc/ppp/pap-Secrets";
 
 	private static String provider_content = "noipdefault\n" +
 			"defaultroute\n" +

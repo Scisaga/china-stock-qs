@@ -42,7 +42,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<Msg> {
 			AskMsg askMsg = (AskMsg) msg;
 			if(askMsg.getAskType() == RequireLogin) {
 				LoginMsg loginMsg = new LoginMsg(ProxyNode.getInstance().id);
-				loginMsg.setSecrets(ProxyContext.secrets);
+				loginMsg.setSecrets(ProxyContext.Secrets);
 				ctx.writeAndFlush(loginMsg);
 			}
 			else if (askMsg.getAskType() == NodeInfo) {

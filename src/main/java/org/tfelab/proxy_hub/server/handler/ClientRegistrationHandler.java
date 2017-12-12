@@ -30,7 +30,7 @@ public class ClientRegistrationHandler extends SimpleChannelInboundHandler<Msg> 
 
             LoginMsg loginMsg = (LoginMsg) msg;
 
-            if(loginMsg.getSecrets().equals(ProxyContext.secrets)){
+            if(loginMsg.getSecrets().equals(ProxyContext.Secrets)){
 
                 ClientChannelMap.add(loginMsg.getClientId(), (SocketChannel) ctx.channel());
                 logger.info("Client:{} login success. ", loginMsg.getClientId());
